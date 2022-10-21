@@ -27,6 +27,6 @@ class UProfilingBPLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_UCLASS_BODY()
 
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Execute Sample function", Keywords = "Profiling sample test testing"), Category = "ProfilingTesting")
-	static float ProfilingSampleFunction(float Param);
+	UFUNCTION(BlueprintCallable)
+	static void SendCommand(FString Command);
 };

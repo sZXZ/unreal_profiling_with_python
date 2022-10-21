@@ -38,6 +38,7 @@ public class Profiling : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"SessionServices",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

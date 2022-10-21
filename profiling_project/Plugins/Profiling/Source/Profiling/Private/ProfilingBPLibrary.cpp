@@ -2,6 +2,8 @@
 
 #include "ProfilingBPLibrary.h"
 #include "Profiling.h"
+#include "ISessionManager.h"
+#include "ISessionServicesModule.h"
 
 UProfilingBPLibrary::UProfilingBPLibrary(const FObjectInitializer& ObjectInitializer)
 : Super(ObjectInitializer)
@@ -9,8 +11,14 @@ UProfilingBPLibrary::UProfilingBPLibrary(const FObjectInitializer& ObjectInitial
 
 }
 
-float UProfilingBPLibrary::ProfilingSampleFunction(float Param)
+void UProfilingBPLibrary::SendCommand(FString Command)
 {
-	return -1;
+	ISessionServicesModule& SessionServicesModule = FModuleManager::LoadModuleChecked<ISessionServicesModule>("SessionServices");
+	TSharedPtr<ISessionManager> SessionManager = SessionServicesModule.GetSessionManager();
+
+	for (auto& Instance : SessionManager->GetSelectedInstances())
+	{
+		Instance->ExecuteCommand(Command);
+	}
 }
 
