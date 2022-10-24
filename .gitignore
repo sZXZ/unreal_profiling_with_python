@@ -1,0 +1,12 @@
+*.sln
+**.pyc
+**/.vs
+**/Saved/*
+**/Intermediate/*
+**/Binaries/*
+**/DerivedDataCache/*
+
+### UPLUGINS ###
+**/Plugins/**/Binaries/
+**/Plugins/**/Intermediate/
+
