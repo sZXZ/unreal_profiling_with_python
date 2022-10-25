@@ -232,7 +232,7 @@ class UnrealEngineConnection():
             return [path_for_tests.joinpath(f"{test_name}")]
         return paths
 
-    def do_fps_chart(self, seconds, test_name: str, wait_for_file=False,
+    def do_fps_chart(self, seconds, test_name: str, wait_for_file=True, wait_time=2,
                      interesting_stats=['FrameTime', 'GPUTime',
                                         'RenderThreadTime', 'GameThreadTime',
                                         'RHIThreadTime', 'RHI/DrawCalls',
@@ -250,10 +250,10 @@ class UnrealEngineConnection():
         sleep(0.1)
         self.rc('stat unit')
         if wait_for_file:
-            sleep(3)
+            sleep(wait_time)
         folders_with_charts = self.move_fps(test_name)
         for folder in folders_with_charts:
-            for p in folder.glob(f'data/*/csvprofile*'):
+            for p in folder.glob(f'csvprofile*'):
                 header_at_end = tail(p, 2)[0].split(',')
                 df = pd.read_csv(
                     p, skipfooter=2, engine='python', on_bad_lines='skip', names=header_at_end, skiprows=1)
@@ -261,7 +261,7 @@ class UnrealEngineConnection():
                 return df, med, med.loc[['FrameTime'], :][test_name][0]
         return pd.DataFrame(), 0, 0
 
-    def do_simple_fps_chart(self, seconds, test_name: str, wait_for_file=False):
+    def do_simple_fps_chart(self, seconds, test_name: str, wait_for_file=True, wait_time=2):
         """
         runs fps chart and moves data from saved folder to data folder
         return: Full DataFrame, median interesting_stats DataFrame, median (FrameTime) 
@@ -275,10 +275,10 @@ class UnrealEngineConnection():
         sleep(0.1)
         self.rc('stat unit')
         if wait_for_file:
-            sleep(3)
+            sleep(wait_time)
         folders_with_charts = self.move_fps(test_name)
         for folder in folders_with_charts:
-            for p in folder.glob(f'data/*/*-fps*.csv'):
+            for p in folder.glob(f'*-fps*.csv'):
                 df = pd.read_csv(p, skiprows=4)
                 med = df[df.columns.to_list()[:-1]].median().to_frame(test_name)
                 return df, med, df['Frame (ms)'].median()
