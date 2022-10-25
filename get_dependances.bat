@@ -1,4 +1,4 @@
-git clone https://github.com/EpicGames/BlenderTools --filter=blob:none --sparse
+git clone git@github.com:EpicGames/BlenderTools.git --filter=blob:none --sparse
 cd BlenderTools
 git sparse-checkout set --no-cone send2ue/dependencies/
 cd ..
