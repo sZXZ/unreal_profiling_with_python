@@ -53,7 +53,7 @@ def profile_gpu(log):
                 spaces.append(len(clean_line) - len(clean_line.lstrip()) + add)
     df = pd.DataFrame({"lines": lines, "spaces": spaces, "values": values})
     df = df.apply(parse_profile_gpu, axis=1)
-    return build_hierarchy(log['lines'].to_list(), log['spaces'].to_list()), df
+    return build_hierarchy(df['lines'].to_list(), df['spaces'].to_list()), df
 
 
 def profile_cpu(log):
@@ -80,5 +80,5 @@ def profile_cpu(log):
                 spaces.append(len(clean_line) -
                               len(clean_line.lstrip()) + add)
                 lines.append(clean_line)
-    log = pd.DataFrame({"lines": lines, "spaces": spaces, "values": values})
-    return build_hierarchy(log['lines'].to_list(), log['spaces'].to_list())
+    df = pd.DataFrame({"lines": lines, "spaces": spaces, "values": values})
+    return build_hierarchy(df['lines'].to_list(), df['spaces'].to_list())
