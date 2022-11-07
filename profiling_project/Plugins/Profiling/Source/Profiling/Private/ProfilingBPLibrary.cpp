@@ -19,6 +19,24 @@ void UProfilingBPLibrary::SendCommand(FString Command)
 	for (auto& Instance : SessionManager->GetSelectedInstances())
 	{
 		Instance->ExecuteCommand(Command);
+		
 	}
+}
+
+
+TArray<FString> UProfilingBPLibrary::GetLog()
+{
+	ISessionServicesModule& SessionServicesModule = FModuleManager::LoadModuleChecked<ISessionServicesModule>("SessionServices");
+	TSharedPtr<ISessionManager> SessionManager = SessionServicesModule.GetSessionManager();
+	TArray<FString> Result;
+	for (auto& Instance : SessionManager->GetSelectedInstances())
+	{
+		for (TSharedPtr<FSessionLogMessage> i : Instance->GetLog())
+		{
+			Result.Push(i->Text);
+		}
+		
+	}
+	return Result;
 }
 

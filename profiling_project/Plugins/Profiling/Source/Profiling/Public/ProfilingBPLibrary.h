@@ -29,4 +29,7 @@ class UProfilingBPLibrary : public UBlueprintFunctionLibrary
 
 	UFUNCTION(BlueprintCallable)
 	static void SendCommand(FString Command);
+
+	UFUNCTION(BlueprintCallable)
+	static TArray<FString> GetLog();
 };
