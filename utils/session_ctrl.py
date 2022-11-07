@@ -130,7 +130,7 @@ class UnrealEngineConnection():
             previous_results.rename(Path(f'{name}_{int(time())}.html'))
         if last_profilegpu != 0:
             html, df = profile_gpu(gpu_data)
-            with open(f'{self.data_folder.resolve()}{name}.html', 'w') as fr:
+            with open(self.data_folder.joinpath(f'{name}.html'), 'w') as fr:
                 fr.write(html)
             display(HTML(html))
             return df
@@ -176,7 +176,7 @@ class UnrealEngineConnection():
             previous_results.rename(Path(f'{name}_{int(time())}.html'))
         if last_profile != 0:
             html = profile_cpu(gpu_data)
-            with open(f'{self.data_folder.resolve()}{name}.html', 'w') as fr:
+            with open(self.data_folder.joinpath(f'{name}.html'), 'w') as fr:
                 fr.write(html)
             display(HTML(html))
         else:
