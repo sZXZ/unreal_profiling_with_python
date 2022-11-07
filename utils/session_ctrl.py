@@ -148,7 +148,7 @@ class UnrealEngineConnection():
         self.rc('stat unit')
         sleep(0.1)
         self.rc('profilegpu')
-        sleep(0.8)
+        sleep(1)
         self.rc('stat unit')
         return self.read_profile_gpu(name, read_for)
 
