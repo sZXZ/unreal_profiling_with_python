@@ -21,11 +21,16 @@ def gather_all_csv_charts_median_in_folders():
     data_frames = []
     for p in Path.cwd().glob(f'data/*/csvprofile*'):
         header_at_end = tail(p, 2)[0].split(',')
+        h = pd.DataFrame(header_at_end)
+        try:
+            h[h.duplicated()] = h[h.duplicated()].apply(lambda x: f'{x[0]}_{x.name}', axis=1).to_frame()
+        except AttributeError:
+            h[h.duplicated()] = h[h.duplicated()].apply(lambda x: f'{x[0]}_{x.name}', axis=1)
         df = pd.read_csv(
             p, skipfooter=2,
             engine='python', on_bad_lines='skip',
-            names=header_at_end, skiprows=1
-        ).median()
+            names=h[0].to_list(), skiprows=1
+        ).median(numeric_only=True)
         data_frames.append(df.to_frame(p.parent.name))
     df = data_frames[0].join(data_frames[1:]).T
     return df
@@ -255,9 +260,14 @@ class UnrealEngineConnection():
         for folder in folders_with_charts:
             for p in folder.glob(f'csvprofile*'):
                 header_at_end = tail(p, 2)[0].split(',')
+                h = pd.DataFrame(header_at_end)
+                try:
+                    h[h.duplicated()] = h[h.duplicated()].apply(lambda x: f'{x[0]}_{x.name}', axis=1).to_frame()
+                except AttributeError:
+                    h[h.duplicated()] = h[h.duplicated()].apply(lambda x: f'{x[0]}_{x.name}', axis=1)
                 df = pd.read_csv(
-                    p, skipfooter=2, engine='python', on_bad_lines='skip', names=header_at_end, skiprows=1)
-                med = df[interesting_stats].median().to_frame(test_name)
+                    p, skipfooter=2, engine='python', on_bad_lines='skip', names=h[0].to_list(), skiprows=1)
+                med = df[interesting_stats].median(numeric_only=True).to_frame(test_name)
                 return df, med, med.loc[['FrameTime'], :][test_name][0]
         return pd.DataFrame(), 0, 0
 
