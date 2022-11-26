@@ -1,2 +1,2 @@
-for %%f in (*.exe) do %%f -stdout -utf8output -Messaging -SessionName="NameThatWillBeShownInFrontend" -execcmds="session AUTH username_of_controlling_pc"
+for %%f in (*.exe) do %%f -stdout -utf8output -Messaging -SessionName="NameThatWillBeShownInFrontend" -execcmds="session AUTH username_of_controlling_pc, stat unitgraph, t.FPSChart.DoCsvProfile 1, t.FPSChart.OpenFolderOnDump 0, r.ProfileGPU.Sort 1"
 pause

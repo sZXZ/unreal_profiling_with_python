@@ -47,7 +47,7 @@ def gather_all_fps_charts_median_in_folders():
 
 
 class UnrealEngineConnection():
-    def __init__(self, project_saved_folder, project_log, do_init=True, project_commands_plugin='ProfilingBPLibrary'):
+    def __init__(self, project_saved_folder, project_log, project_commands_plugin='ProfilingBPLibrary'):
         """
         UnrealEngineRemoteExecution class for running tests in session frontend 
         make sure to select session in unreal engine
@@ -68,8 +68,6 @@ class UnrealEngineConnection():
         for node in self.remote_exec.remote_nodes:
             if node['project_name'] in self.project_name:
                 self.remote_exec.open_command_connection(node.get("node_id"))
-        if do_init:
-            self.init_build_setup()
 
     def rc(self, command):
         if self.remote_exec.has_command_connection:
