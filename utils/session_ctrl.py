@@ -55,19 +55,23 @@ class UnrealEngineConnection():
         send_command(FString) -> sends console command to a selected Session in session frontend
         """
         self.project_saved_folder = project_saved_folder
-        self.project_name = project_saved_folder.split('\\')[-2]
         self.project_log = project_log
-
-        self.remote_exec = RemoteExecution()
-        self.remote_exec.start()
+        self.use_get_log = False
         self.data_folder = Path.cwd().joinpath('data')
         self.project_commands_plugin = project_commands_plugin
-        if not self.data_folder.exists():
-            self.data_folder.mkdir()
+        # Create Remote Execution
+        self.remote_exec = RemoteExecution()
+        self.remote_exec.start()
         sleep(1)
+        if not self.data_folder.exists():
+            self.data_folder.mkdir()    
+        print('searching for connection...')
         for node in self.remote_exec.remote_nodes:
-            if node['project_name'] in self.project_name:
-                self.remote_exec.open_command_connection(node.get("node_id"))
+            self.remote_exec.open_command_connection(node.get("node_id"))
+        if self.remote_exec.has_command_connection():
+            print('Connected')
+        else:
+            print('Failed to connect')
 
     def rc(self, command):
         if self.remote_exec.has_command_connection:
@@ -213,7 +217,6 @@ class UnrealEngineConnection():
         moves all fps chart data from saved folder
         """
         saved = Path(self.project_saved_folder)
-        log = saved.joinpath('logs', f'{self.project_name}.log')
         fps_charts = saved.joinpath('profiling', 'fpschartstats')
         path_for_tests = self.data_folder
         possible_paths = fps_charts.iterdir()
@@ -295,17 +298,17 @@ class UnrealEngineConnection():
     # -----------------------------------------------------------------------
     # techart_tools project specific commands
 
-    def open_level(self, level_name:str):
+    def open_level(self, level_name: str):
         self.rc(f'open {level_name}')
 
-    def open_level_with_gamemode(self, level_name:str, gamemode_path:str):
+    def open_level_with_gamemode(self, level_name: str, gamemode_path: str):
         self.rc(f'open {level_name}?game={gamemode_path}')
 
-    def stream_level_in(self, level_path:str):
+    def stream_level_in(self, level_path: str):
         self.rc(f'streamLevelIn {level_path}')
 
-    def stream_level_out(self, level_path:str):
+    def stream_level_out(self, level_path: str):
         self.rc(f'streamLevelOut {level_path}')
 
-    def do_enchanted_input_action(self, action:str):
+    def do_enchanted_input_action(self, action: str):
         self.rc(f'input.+action {action}')
