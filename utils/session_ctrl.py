@@ -272,6 +272,36 @@ class UnrealEngineConnection():
                 return df, med, med.loc[['FrameTime'], :][test_name][0]
         return pd.DataFrame(), 0, 0
 
+    def stop_fps_chart(self, test_name: str, wait_for_file=True, wait_time=2,
+                     interesting_stats=['FrameTime', 'GPUTime',
+                                        'RenderThreadTime', 'GameThreadTime',
+                                        'RHIThreadTime', 'RHI/DrawCalls',
+                                        'RHI/PrimitivesDrawn']):
+        """
+        runs fps chart and moves data from saved folder to data folder
+        return: Full Csv Chart DataFrame, median interesting_stats DataFrame, median (FrameTime) 
+        """
+        shutil.rmtree(Path.cwd().joinpath(test_name), ignore_errors=True)
+        self.rc("stopfpschart")
+        sleep(0.1)
+        self.rc('stat unit')
+        if wait_for_file:
+            sleep(wait_time)
+        folders_with_charts = self.move_fps(test_name)
+        for folder in folders_with_charts:
+            for p in folder.glob(f'csvprofile*'):
+                header_at_end = tail(p, 2)[0].split(',')
+                h = pd.DataFrame(header_at_end)
+                try:
+                    h[h.duplicated()] = h[h.duplicated()].apply(lambda x: f'{x[0]}_{x.name}', axis=1).to_frame()
+                except AttributeError:
+                    h[h.duplicated()] = h[h.duplicated()].apply(lambda x: f'{x[0]}_{x.name}', axis=1)
+                df = pd.read_csv(
+                    p, skipfooter=2, engine='python', on_bad_lines='skip', names=h[0].to_list(), skiprows=1)
+                med = df[interesting_stats].median(numeric_only=True).to_frame(test_name)
+                return df, med, med.loc[['FrameTime'], :][test_name][0]
+        return pd.DataFrame(), 0, 0
+
     def do_simple_fps_chart(self, seconds, test_name: str, wait_for_file=True, wait_time=2):
         """
         runs fps chart and moves data from saved folder to data folder
