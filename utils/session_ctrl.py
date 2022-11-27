@@ -45,6 +45,18 @@ def gather_all_fps_charts_median_in_folders():
     df = data_frames[0].join(data_frames[1:]).T
     return df
 
+def compare_profilegpu_df(a, b):
+    # group duplicate data 
+    a = a.reset_index().groupby('name').agg({'ms':['count', 'max', 'sum'],'index':[list]})
+    b = b.reset_index().groupby('name').agg({'ms':['count', 'max', 'sum'],'index':[list]})
+    # remove multi index
+    a.columns = ['count','max', 'sum', 'max_position']
+    b.columns = ['count','max', 'sum', 'max_position']
+    result = pd.merge(a,b, on='name', indicator='exists in df', how='outer')
+    result = result=result.fillna(0, axis=1)
+    result['diff'] = result['sum_x'] - result['sum_y']
+    return result.sort_values('diff', key=abs, ascending=False)
+
 
 class UnrealEngineConnection():
     def __init__(self, project_saved_folder, project_log, project_commands_plugin='ProfilingBPLibrary'):
