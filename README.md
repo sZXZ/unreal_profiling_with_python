@@ -48,6 +48,8 @@ or Engine.ini
 StaticEndpoints=192.168.**.***:6666
 ```
 
+Use `-execcmds="session AUTH username_of_controlling_pc"` to unlock machines in local network for commands 
+
 # utils - session_ctrl
 
 Designed to be used with Jupyter Notebook to automate gathering and visualization of Unreal Engine profiling commands like profilegpu, StartFpsChart and StopFpsChart
