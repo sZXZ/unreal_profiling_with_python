@@ -6,11 +6,9 @@ This repository has code to start gathering and visualizing data from UE games v
 
 # How to start using 
 
-run **get_dependencies.bat** to get remote execution from https://github.com/EpicGames/BlenderTools and create venv
+run **get_dependencies.bat** to setup venv with dependencies based on python that packaged with unreal engine installation 
 
-run **set_local_paths.bat** to add dependencies paths into venv
-
-## Runnning profiling_project 
+## Running profiling_project 
 Profiling_project is a container Project for ProfilingBPLibrary cpp plugin that exposes https://docs.unrealengine.com/5.1/en-US/API/Runtime/SessionServices/ISessionInstanceInfo/ExecuteCommand/ to Blueprints/Python
 
 * run profiling_project/profiling_project.uproject
